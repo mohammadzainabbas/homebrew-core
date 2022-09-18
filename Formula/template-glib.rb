@@ -24,11 +24,9 @@ class TemplateGlib < Formula
   uses_from_macos "flex"
 
   def install
-    mkdir "build" do
-      system "meson", *std_meson_args, "-Dwith_vapi=false", ".."
-      system "ninja", "-v"
-      system "ninja", "install", "-v"
-    end
+    system "meson", "setup", "build", "-Dvapi=false", "-Dintrospection=enabled", *std_meson_args
+    system "meson", "compile", "-C", "build", "--verbose"
+    system "meson", "install", "-C", "build"
   end
 
   test do

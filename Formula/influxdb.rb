@@ -33,6 +33,12 @@ class Influxdb < Formula
   resource "pkg-config-wrapper" do
     url "https://github.com/influxdata/pkg-config/archive/refs/tags/v0.2.11.tar.gz"
     sha256 "52b22c151163dfb051fd44e7d103fc4cde6ae8ff852ffc13adeef19d21c36682"
+    
+    livecheck do
+      url "https://github.com/influxdata/pkg-config/tags"
+      regex(%r{href="/influxdata/pkg-config/archive/refs/tags/v(.*).tar.gz"}i)
+      strategy :page_match
+    end
   end
 
   # NOTE: The version/URL here is specified in scripts/fetch-ui-assets.sh in influxdb.

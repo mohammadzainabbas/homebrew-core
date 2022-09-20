@@ -33,6 +33,12 @@ class Flux < Formula
   resource "pkg-config-wrapper" do
     url "https://github.com/influxdata/pkg-config/archive/v0.2.12.tar.gz"
     sha256 "23b2ed6a2f04d42906f5a8c28c8d681d03d47a1c32435b5df008adac5b935f1a"
+
+    livecheck do
+      url "https://github.com/influxdata/pkg-config/tags"
+      regex(%r{href="/influxdata/pkg-config/archive/refs/tags/v(.*).tar.gz"}i)
+      strategy :page_match
+    end
   end
 
   def install

@@ -39,6 +39,16 @@ class Luvit < Formula
         tag:      "v2.12.0",
         revision: "5d1052f11e813ff9edc3ec75b5282b3e6cb0f3bf"
 
+    livecheck do
+      url "https://raw.githubusercontent.com/luvit/luvit/master/Makefile"
+      regex(/(LIT_VERSION=)+(\d+(?:\.\d+)+)/i)
+      strategy :page_match do |page, regex|
+        lit_version = page[regex, 2]
+        luvi_page = Homebrew::Livecheck::Strategy.page_content("https://raw.githubusercontent.com/luvit/lit/#{lit_version}/get-lit.sh")
+        luvi_page[:content].scan(/(LUVI_VERSION:-)+(\d+(?:\.\d+)+)/i).map { |match| match[1] }
+      end
+    end
+
     # Remove outdated linker flags that break the ARM build.
     # https://github.com/luvit/luvi/pull/261
     patch do

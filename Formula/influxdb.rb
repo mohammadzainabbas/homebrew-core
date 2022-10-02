@@ -9,6 +9,9 @@ class Influxdb < Formula
 
   # The regex below omits a rogue `v9.9.9` tag that breaks version comparison.
   livecheck do
+
+    # skip "No version information available to check"
+
     url :stable
     regex(/^v?((?!9\.9\.9)\d+(?:\.\d+)+)$/i)
   end
@@ -35,9 +38,29 @@ class Influxdb < Formula
     sha256 "52b22c151163dfb051fd44e7d103fc4cde6ae8ff852ffc13adeef19d21c36682"
 
     livecheck do
-      url "https://github.com/influxdata/pkg-config/tags"
-      regex(%r{href="/influxdata/pkg-config/archive/refs/tags/v(.*).tar.gz"}i)
-      strategy :page_match
+
+      # skip "Not maintained by upstream, so skipping"
+
+      # url "https://github.com/influxdata/pkg-config/tags"
+      # regex(%r{href="/influxdata/pkg-config/archive/refs/tags/v(.*).tar.gz"}i)
+      # strategy :page_match
+
+      url "https://raw.githubusercontent.com/influxdata/influxdb/master/go.mod"
+      # regex(/(pkg-config\s)+(v?((?!9\.9\.9)\d+(?:\.\d+)+))/i)
+      # regex(/(pkg-config\s)+(v?((?!9\.9\.9)\d+))/i)
+      # regex(/(pkg-config )+(v?((?!9\.9\.9)\d+(?:\.\d+)+))/)
+      regex(/(pkg-config\sv)+(\d+(?:\.\d+)+)/i)
+      
+      # regex(/(pkg-config)/)
+
+      strategy :page_match do |page, regex|
+
+        # p "page: #{page}"
+        p "page.scan(regex): #{page.scan(regex)}"
+        page.scan(regex).map { |match| match[1] }
+
+      end
+
     end
   end
 
